@@ -1,0 +1,11 @@
+{
+  "schedule": {
+    "start": "09:00",
+    "end": "17:00"
+  },
+  "sites": [
+    "instagram.com",
+    "reddit.com",
+    "youtube.com"
+  ]
+}

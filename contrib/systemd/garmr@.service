@@ -1,0 +1,33 @@
+# Template unit: the instance name is the user whose config is enforced.
+#   sudo systemctl enable --now garmr@$USER
+# @BINDIR@ and @DOCDIR@ are substituted by `make install`.
+
+[Unit]
+Description=garmr website blocker for %i
+Documentation=file://@DOCDIR@/README.md
+
+[Service]
+Type=simple
+ExecStart=@BINDIR@/garmr -config /home/%i/.config/garmr/config.json run
+Restart=always
+RestartSec=5
+
+# Hardening. garmr only writes /etc (hosts file plus a temp file for the
+# atomic rename) and /run (lock file), and reads the user's config.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadWritePaths=/etc /run
+ProtectHome=read-only
+PrivateTmp=yes
+PrivateNetwork=yes
+RestrictAddressFamilies=AF_UNIX
+# DAC_READ_SEARCH: read the config through a mode-700 home directory.
+CapabilityBoundingSet=CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+
+[Install]
+WantedBy=multi-user.target
